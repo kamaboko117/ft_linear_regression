@@ -7,8 +7,12 @@ from estimate import estimate_price
 data = pd.read_csv("data.csv")
 tmpdata = data.copy()
 
+# Calculate mean and standard deviation of the km values
+km_mean = data['km'].mean()
+km_std = data['km'].std()
+
 # Normalize the km values
-data['km'] = (data['km'] - data['km'].mean()) / data['km'].std()
+data['km'] = (data['km'] - km_mean) / km_std
 
 # Define learning rate and thetas
 learning_rate = 0.1
@@ -31,8 +35,10 @@ def learn():
 for i in range(100):
     learn()
 
+# Save the theta values
+# denormalize theta1
 set_key(".env", "THETA0", str(theta0))
-set_key(".env", "THETA1", str(theta1))
+set_key(".env", "THETA1", str(theta1 / km_std))
 
 # Plot data
 plt.scatter(tmpdata['km'], data['price'])
