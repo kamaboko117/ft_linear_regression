@@ -19,6 +19,7 @@ learning_rate = 0.1
 theta0 = 0
 theta1 = 0
 convergence_threshold = 1e-6
+max_iterations = 10000
 
 def learn():
     global theta0, theta1
@@ -32,6 +33,7 @@ def learn():
 
     # Check for convergence
     if abs(new_theta0 - theta0) < convergence_threshold and abs(new_theta1 - theta1) < convergence_threshold:
+        print (f"Converged after {iterations} iterations")
         return False
 
     theta0 = new_theta0
@@ -39,9 +41,13 @@ def learn():
 
     return True
 
-# run the learning loop until convergence
+# Run the learning loop until convergence or max iterations
+iterations = 0
 while learn():
-    pass
+    iterations += 1
+    if iterations >= max_iterations:
+        print("Reached maximum iterations")
+        break
 
 # Save the theta values
 # denormalize theta1
