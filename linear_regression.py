@@ -18,6 +18,7 @@ data['km'] = (data['km'] - km_mean) / km_std
 learning_rate = 0.1
 theta0 = 0
 theta1 = 0
+convergence_threshold = 1e-6
 
 def learn():
     global theta0, theta1
@@ -26,14 +27,21 @@ def learn():
     gradient_theta0 = (1/m) * sum([estimate_price(data['km'][i], theta0, theta1) - data['price'][i] for i in range(m)])
     gradient_theta1 = (1/m) * sum([(estimate_price(data['km'][i], theta0, theta1) - data['price'][i]) * data['km'][i] for i in range(m)])
 
-    print(f"theta0: {theta0} -> {theta0 - learning_rate * gradient_theta0}")
-    print(f"theta1: {theta1} -> {theta1 - learning_rate * gradient_theta1}")
+    new_theta0 = theta0 - learning_rate * gradient_theta0
+    new_theta1 = theta1 - learning_rate * gradient_theta1
 
-    theta0 -= learning_rate * gradient_theta0
-    theta1 -= learning_rate * gradient_theta1
+    # Check for convergence
+    if abs(new_theta0 - theta0) < convergence_threshold and abs(new_theta1 - theta1) < convergence_threshold:
+        return False
 
-for i in range(100):
-    learn()
+    theta0 = new_theta0
+    theta1 = new_theta1
+
+    return True
+
+# run the learning loop until convergence
+while learn():
+    pass
 
 # Save the theta values
 # denormalize theta1
